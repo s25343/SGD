@@ -1,12 +1,77 @@
 #include <SDL.h>
 #include <stdio.h>
+#include <iostream>
 #include "Player.h"
+#include "Tile.h"
+
+using namespace std;
 
 #define SCREEN_WIDTH 1280
 #define SCREEN_HEIGHT 720
+vector<Tile> tiles;
+vector<Points> pointss;
+int score = 0;
+void drawPoints(){
+    pointss.clear();
+    const int pointSize = 55;
+    int map[15][25] = {
+            {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+            {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0},
+            {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+            {0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0},
+            {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0},
+            {0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+            {0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+            {0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+            {0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+            {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+            {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+            {0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+            {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+            {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
+    };
+
+    for (int i = 0; i < 15; i++) {
+        for (int j = 0; j < 25; j++) {
+            if (map[i][j] == 1) {
+                pointss.emplace_back(j * pointSize, i * pointSize);
+            }
+        }
+    }
+}
+void drawMap() {
+    tiles.clear();
+    const int tileSize = 50;
+    int map[15][25] = {
+            {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+            {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+            {1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1},
+            {1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1},
+            {1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 1, 0, 1},
+            {1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 1, 1, 0, 1, 0, 1},
+            {1, 0, 1, 0, 1, 0, 1, 1, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 0, 0, 0, 1, 0, 1},
+            {1, 0, 1, 0, 1, 0, 1, 0, 0, 0, 1, 0, 1, 0, 1, 0, 0, 0, 1, 0, 1, 1, 1, 0, 1},
+            {1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 0, 0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 1},
+            {1, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 1, 1, 0, 1},
+            {1, 1, 1, 1, 1, 1, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 0, 0, 1, 0, 1},
+            {1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 1, 1, 0, 1, 0, 0},
+            {1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1},
+            {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}
+    };
+
+    for (int i = 0; i < 15; i++) {
+        for (int j = 0; j < 25; j++) {
+            if (map[i][j] == 1) {
+                tiles.emplace_back(j * tileSize, i * tileSize);
+            }
+        }
+    }
+}
+
+
 
 int main(int argc, char** argv){
-    Player player(SCREEN_WIDTH/2, SCREEN_HEIGHT/2);
+    Player player(50, 50);
     double dt = 1/60.0;
     double gameTime = 0;
     Uint32 lastTime = SDL_GetTicks();
@@ -16,7 +81,7 @@ int main(int argc, char** argv){
         return 1;
     }
 
-    SDL_Window *window = SDL_CreateWindow("SLD test", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, 0);
+    SDL_Window *window = SDL_CreateWindow("Labirynt", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, 0);
     if(!window){
         printf("Error: Failed to open window\nSDL Error: '%s'\n", SDL_GetError());
         return 1;
@@ -47,9 +112,30 @@ int main(int argc, char** argv){
         gameTime += dt;
         Uint32 deltaTime = currentTime - lastTime;
 
-        player.update(SCREEN_WIDTH, SCREEN_HEIGHT, dt);
-        SDL_SetRenderDrawColor(renderer, 0, 255, 255, 255);
+        player.update(SCREEN_WIDTH, SCREEN_HEIGHT, dt, tiles, pointss);
+
+        if(player.mRect.x < 0 || player.mRect.x + player.mRect.w > SCREEN_WIDTH || player.mRect.y < 0  || player.mRect.y + player.mRect.h > SCREEN_HEIGHT){
+            running = false;
+        }
+
+        SDL_SetRenderDrawColor(renderer, 169, 214, 216, 1);
         SDL_RenderClear(renderer);
+        drawMap();
+        drawPoints();
+        for(auto& tile: tiles){
+            tile.render(renderer);
+//            if(player.checkCollision1(tile.mRect)){
+//                score--;
+//                cout<<score<<endl;
+//            }
+        }
+        for(auto& point: pointss){
+            point.render(renderer);
+//            if(player.checkCollision1(point.mRect)){
+//                score--;
+//                cout<<score<<endl;
+//            }
+        }
         player.render(renderer);
         SDL_RenderPresent(renderer);
 

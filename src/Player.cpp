@@ -1,13 +1,14 @@
 #include "Player.h"
 #include "SDL2/SDL.h"
+#include "Tile.h"
+#include "Points.h"
 #include <cmath>
-#include <iostream>
 
 Player::Player(int x, int y) {
     mRect.x = x;
     mRect.y =y;
-    mRect.w = 40;
-    mRect.h = 60;
+    mRect.w = 20;
+    mRect.h = 20;
     mVelocity.x = 0;
     mVelocity.y = 0;
 }
@@ -29,20 +30,14 @@ void Player::walkingEvent(SDL_Event &event) {
     }
 }
 
-void Player::update(int SCREEN_WIDTH, int SCREEN_HEIGHT, double dt) {
-    std::cout << "Kaka";
-    mRect.x += mVelocity.x * 200 * dt;
-    mRect.y += mVelocity.y * 200 * dt;
+void Player::update(int SCREEN_WIDTH, int SCREEN_HEIGHT, double dt,  const std::vector<Tile>& tiles, const std::vector<Points>& pointss) {
 
     int old_x = mRect.x;
     int old_y = mRect.y;
+    mRect.x += mVelocity.x * 125 * dt;
+    mRect.y += mVelocity.y * 125 * dt;
 
-    if(mRect.x < 0 || mRect.y < 0 || mRect.x + mRect.w > SCREEN_WIDTH || mRect.y + mRect.h > SCREEN_HEIGHT){
-        mRect.x = old_x;
-        mRect.y = old_y;
-    }
-
-    const double friction = 0.03;
+    const double friction = 0.05;
     if(fabs(mVelocity.x)>0.1){
         mVelocity.x *= 1.0 - friction;
     }
@@ -55,9 +50,29 @@ void Player::update(int SCREEN_WIDTH, int SCREEN_HEIGHT, double dt) {
     else{
         mVelocity.y = 0;
     }
+    for (const auto& tile : tiles) {
+        if (SDL_HasIntersection(&mRect, &tile.mRect)) {
+            mRect.x = old_x;
+            mRect.y = old_y;
+        }
+    }
+    for (const auto& point : pointss) {
+        if (SDL_HasIntersection(&mRect, &point.mRect)) {
+//            mRect.x = old_x;
+//            mRect.y = old_y;
+        }
+    }
 }
 
+bool Player::checkCollision1(SDL_Rect tileRect) {
+    if(SDL_HasIntersection(&tileRect, &mRect)){
+        return true;
+    }
+    return false;
+}
+
+
 void Player::render(SDL_Renderer *renderer) {
-    SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
+    SDL_SetRenderDrawColor(renderer, 236, 21, 59, 1);
     SDL_RenderFillRect(renderer, &mRect);
 }

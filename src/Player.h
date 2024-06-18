@@ -6,15 +6,22 @@ struct VELOCITY {
     double y;
 };
 #include "SDL2/SDL.h"
+#include "Tile.h"
+#include "Points.h"
+
 class Player {
 public:
     Player(int x, int y);
     void walkingEvent(SDL_Event& event);
-    void update(int SCREEN_WIDTH, int SCREEN_HEIGHT, double dt);
+    void update(int SCREEN_WIDTH, int SCREEN_HEIGHT, double dt, const std::vector<Tile>& tiles, const std::vector<Points>& pointss);
     void render(SDL_Renderer* renderer);
     SDL_Rect mRect;
+
+    bool checkCollision1(SDL_Rect tileRect);
+
 private:
     VELOCITY mVelocity;
+
 };
 
 #endif //MYGAME_PLAYER_H

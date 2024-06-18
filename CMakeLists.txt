@@ -15,7 +15,7 @@ else()
 endif()
 
 # Create your game executable target as usual
-add_executable(mygame WIN32 main.cpp src/Player.cpp src/Player.h)
+add_executable(mygame WIN32 main.cpp src/Player.cpp src/Player.h src/Tile.cpp src/Tile.h src/Points.cpp src/Points.h)
 
 # SDL2::SDL2main may or may not be available. It is e.g. required by Windows GUI applications
 if(TARGET SDL2::SDL2main)
