@@ -13,10 +13,10 @@ class Player {
 public:
     Player(int x, int y);
     void walkingEvent(SDL_Event& event);
-    void update(int SCREEN_WIDTH, int SCREEN_HEIGHT, double dt, const std::vector<Tile>& tiles, const std::vector<Points>& pointss);
+    void update(int SCREEN_WIDTH, int SCREEN_HEIGHT, double dt, const std::vector<Tile>& tiles, std::vector<Points>& pointss);
     void render(SDL_Renderer* renderer);
     SDL_Rect mRect;
-
+    void checkCollisionWithPoints(std::vector<Points>& pointss);
     bool checkCollision1(SDL_Rect tileRect);
 
 private:

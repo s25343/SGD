@@ -1,7 +1,3 @@
-//
-// Created by Lenovo on 18.06.2024.
-//
-
 #ifndef MYGAME_POINTS_H
 #define MYGAME_POINTS_H
 #include "SDL.h"

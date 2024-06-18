@@ -5,6 +5,7 @@ Tile::Tile(int x, int y){
     mRect.w = 50;
     mRect.h = 50;
 }
+
 void Tile::render(SDL_Renderer *renderer) {
     SDL_SetRenderDrawColor(renderer, 64, 125, 175, 1);
     SDL_RenderFillRect(renderer, &mRect);

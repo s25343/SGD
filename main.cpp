@@ -71,6 +71,9 @@ void drawMap() {
 
 
 int main(int argc, char** argv){
+    printf("score");
+    drawMap();
+    drawPoints();
     Player player(50, 50);
     double dt = 1/60.0;
     double gameTime = 0;
@@ -112,22 +115,14 @@ int main(int argc, char** argv){
         gameTime += dt;
         Uint32 deltaTime = currentTime - lastTime;
 
-        player.update(SCREEN_WIDTH, SCREEN_HEIGHT, dt, tiles, pointss);
-
         if(player.mRect.x < 0 || player.mRect.x + player.mRect.w > SCREEN_WIDTH || player.mRect.y < 0  || player.mRect.y + player.mRect.h > SCREEN_HEIGHT){
             running = false;
         }
 
         SDL_SetRenderDrawColor(renderer, 169, 214, 216, 1);
         SDL_RenderClear(renderer);
-        drawMap();
-        drawPoints();
         for(auto& tile: tiles){
             tile.render(renderer);
-//            if(player.checkCollision1(tile.mRect)){
-//                score--;
-//                cout<<score<<endl;
-//            }
         }
         for(auto& point: pointss){
             point.render(renderer);
@@ -136,9 +131,11 @@ int main(int argc, char** argv){
 //                cout<<score<<endl;
 //            }
         }
-        player.render(renderer);
-        SDL_RenderPresent(renderer);
 
+        player.update(SCREEN_WIDTH, SCREEN_HEIGHT, dt, tiles, pointss);
+        player.render(renderer);
+        player.checkCollisionWithPoints(pointss);
+        SDL_RenderPresent(renderer);
         if (deltaTime < 1000/60) {
             SDL_Delay((1000/60) - deltaTime);
         }

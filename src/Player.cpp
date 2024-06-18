@@ -3,6 +3,7 @@
 #include "Tile.h"
 #include "Points.h"
 #include <cmath>
+#include <iostream>
 
 Player::Player(int x, int y) {
     mRect.x = x;
@@ -30,8 +31,7 @@ void Player::walkingEvent(SDL_Event &event) {
     }
 }
 
-void Player::update(int SCREEN_WIDTH, int SCREEN_HEIGHT, double dt,  const std::vector<Tile>& tiles, const std::vector<Points>& pointss) {
-
+void Player::update(int SCREEN_WIDTH, int SCREEN_HEIGHT, double dt, const std::vector<Tile>& tiles, std::vector<Points>& pointss) {
     int old_x = mRect.x;
     int old_y = mRect.y;
     mRect.x += mVelocity.x * 125 * dt;
@@ -56,14 +56,18 @@ void Player::update(int SCREEN_WIDTH, int SCREEN_HEIGHT, double dt,  const std::
             mRect.y = old_y;
         }
     }
-    for (const auto& point : pointss) {
+}
+
+void Player::checkCollisionWithPoints(std::vector<Points>& pointss){
+    std::cout << "called" << std::endl;
+    for (auto& point : pointss) {
         if (SDL_HasIntersection(&mRect, &point.mRect)) {
-//            mRect.x = old_x;
-//            mRect.y = old_y;
+            point = pointss.back();
+            pointss.pop_back();
+            break;
         }
     }
 }
-
 bool Player::checkCollision1(SDL_Rect tileRect) {
     if(SDL_HasIntersection(&tileRect, &mRect)){
         return true;
