@@ -169,7 +169,6 @@ int main(int argc, char** argv){
         if (deltaTime < 1000/60) {
             SDL_Delay((1000/60) - deltaTime);
         }
-
     }
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
