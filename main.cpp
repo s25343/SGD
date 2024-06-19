@@ -30,7 +30,7 @@ int map[14][25] = {
         {1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1},
         {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}
 };
-
+int count = 0;
 void drawPoints(){
     pointss.clear();
     const int pointSize = 55;
@@ -51,24 +51,14 @@ void drawPoints(){
             {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
     };
 
-    int sum = 0;
     for (int i = 0; i < 14; i++) {
         for (int j = 0; j < 25; j++) {
-            sum += mapPoints[i][j];
             if (mapPoints[i][j] == 1) {
                 pointss.emplace_back(j * pointSize, i * pointSize);
-            }
-            if(player.checkCollisionWithPoints(pointss)){
-                sum--;
-            }
-            if(sum <= 20){
-                map[4][24]=0;
+                count++;
             }
         }
     }
-//    for (int i = 0; i < 14; i++) {
-//        for (int j = 0; j < 25; j++) {
-//    }
 }
 
 void drawMap() {
@@ -106,7 +96,6 @@ void drawMap() {
 int main(int argc, char** argv){
     drawMap();
     drawPoints();
-    drawMap();
     double dt = 1/60.0;
     double gameTime = 0;
     Uint32 lastTime = SDL_GetTicks();
@@ -167,7 +156,15 @@ int main(int argc, char** argv){
 
         player.update(SCREEN_WIDTH, SCREEN_HEIGHT, dt, tiles, pointss);
         player.render(renderer);
-        player.checkCollisionWithPoints(pointss);
+
+        if(player.checkCollisionWithPoints(pointss)){
+            count--;
+            if(count == 25){
+                map[4][24] = 0;
+                drawMap();
+            }
+        }
+
         SDL_RenderPresent(renderer);
         if (deltaTime < 1000/60) {
             SDL_Delay((1000/60) - deltaTime);
