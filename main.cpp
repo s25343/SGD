@@ -1,6 +1,7 @@
 #include <SDL.h>
 #include <stdio.h>
 #include <iostream>
+#include <memory>
 #include "Player.h"
 #include "Tile.h"
 
@@ -8,13 +9,32 @@ using namespace std;
 
 #define SCREEN_WIDTH 1280
 #define SCREEN_HEIGHT 720
+
 vector<Tile> tiles;
 vector<Points> pointss;
-int score = 0;
+Player player(50,50);
+
+int map[14][25] = {
+        {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
+        {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+        {1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1},
+        {1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1},
+        {1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 1, 0, 1},
+        {1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 1, 1, 0, 1, 0, 1},
+        {1, 0, 1, 0, 1, 0, 1, 1, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 0, 0, 0, 1, 0, 1},
+        {1, 0, 1, 0, 1, 0, 1, 0, 0, 0, 1, 0, 1, 0, 1, 0, 0, 0, 1, 0, 1, 1, 1, 0, 1},
+        {1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 0, 0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 1},
+        {1, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 1, 1, 0, 1},
+        {1, 1, 1, 1, 1, 1, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 0, 0, 1, 0, 1},
+        {1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 1, 1, 0, 1, 0, 1},
+        {1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1},
+        {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}
+};
+
 void drawPoints(){
     pointss.clear();
     const int pointSize = 55;
-    int map[15][25] = {
+    int mapPoints[14][25] = {
             {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
             {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0},
             {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
@@ -31,35 +51,30 @@ void drawPoints(){
             {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
     };
 
-    for (int i = 0; i < 15; i++) {
+    int sum = 0;
+    for (int i = 0; i < 14; i++) {
         for (int j = 0; j < 25; j++) {
-            if (map[i][j] == 1) {
+            sum += mapPoints[i][j];
+            if (mapPoints[i][j] == 1) {
                 pointss.emplace_back(j * pointSize, i * pointSize);
+            }
+            if(player.checkCollisionWithPoints(pointss)){
+                sum--;
+            }
+            if(sum <= 20){
+                map[4][24]=0;
             }
         }
     }
+//    for (int i = 0; i < 14; i++) {
+//        for (int j = 0; j < 25; j++) {
+//    }
 }
+
 void drawMap() {
     tiles.clear();
     const int tileSize = 50;
-    int map[15][25] = {
-            {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
-            {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1},
-            {1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1},
-            {1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1},
-            {1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 1, 0, 1},
-            {1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 1, 1, 0, 1, 0, 1},
-            {1, 0, 1, 0, 1, 0, 1, 1, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 0, 0, 0, 1, 0, 1},
-            {1, 0, 1, 0, 1, 0, 1, 0, 0, 0, 1, 0, 1, 0, 1, 0, 0, 0, 1, 0, 1, 1, 1, 0, 1},
-            {1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 0, 0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 1},
-            {1, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 1, 1, 0, 1},
-            {1, 1, 1, 1, 1, 1, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 0, 0, 1, 0, 1},
-            {1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 1, 1, 0, 1, 0, 0},
-            {1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1},
-            {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1}
-    };
-
-    for (int i = 0; i < 15; i++) {
+    for (int i = 0; i < 14; i++) {
         for (int j = 0; j < 25; j++) {
             if (map[i][j] == 1) {
                 tiles.emplace_back(j * tileSize, i * tileSize);
@@ -68,13 +83,30 @@ void drawMap() {
     }
 }
 
-
+//std::shared_ptr<SDL_Texture> load_image(SDL_Renderer *renderer, const std::string &file_name) {
+//    SDL_Surface *surface;
+//    SDL_Texture *texture;
+//    surface = SDL_LoadBMP(file_name.c_str());
+//    if (!surface) {
+//        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Couldn't create surface from image: %s", SDL_GetError());
+//        throw std::invalid_argument(SDL_GetError());
+//    }
+//    SDL_SetColorKey(surface, SDL_TRUE, SDL_MapRGB(surface->format,0, 255, 255));
+//    texture = SDL_CreateTextureFromSurface(renderer, surface);
+//    if (!texture) {
+//        SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Couldn't create texture from surface: %s", SDL_GetError());
+//        throw std::invalid_argument(SDL_GetError());
+//    }
+//    SDL_FreeSurface(surface);
+//    return {texture, [](SDL_Texture *t) {
+//        SDL_DestroyTexture(t);
+//    }};
+//}
 
 int main(int argc, char** argv){
-    printf("score");
     drawMap();
     drawPoints();
-    Player player(50, 50);
+    drawMap();
     double dt = 1/60.0;
     double gameTime = 0;
     Uint32 lastTime = SDL_GetTicks();
@@ -96,13 +128,17 @@ int main(int argc, char** argv){
         return 1;
     }
 
-    bool running = true;
-    while(running){
+//    auto player_texture = load_image(renderer, "player.bmp");
+//    auto tiles_texture = load_image(renderer, "30_122667.bmp");
+//    auto background_texture = load_image(renderer, "background.bmp");
+
+    bool game = true;
+    while(game){
         SDL_Event event;
         while(SDL_PollEvent(&event)){
             switch(event.type){
                 case SDL_QUIT:
-                    running = false;
+                    game = false;
                     break;
 
                 default:
@@ -116,20 +152,17 @@ int main(int argc, char** argv){
         Uint32 deltaTime = currentTime - lastTime;
 
         if(player.mRect.x < 0 || player.mRect.x + player.mRect.w > SCREEN_WIDTH || player.mRect.y < 0  || player.mRect.y + player.mRect.h > SCREEN_HEIGHT){
-            running = false;
+            game = false;
         }
 
         SDL_SetRenderDrawColor(renderer, 169, 214, 216, 1);
         SDL_RenderClear(renderer);
+
         for(auto& tile: tiles){
             tile.render(renderer);
         }
         for(auto& point: pointss){
             point.render(renderer);
-//            if(player.checkCollision1(point.mRect)){
-//                score--;
-//                cout<<score<<endl;
-//            }
         }
 
         player.update(SCREEN_WIDTH, SCREEN_HEIGHT, dt, tiles, pointss);

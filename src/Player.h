@@ -16,8 +16,8 @@ public:
     void update(int SCREEN_WIDTH, int SCREEN_HEIGHT, double dt, const std::vector<Tile>& tiles, std::vector<Points>& pointss);
     void render(SDL_Renderer* renderer);
     SDL_Rect mRect;
-    void checkCollisionWithPoints(std::vector<Points>& pointss);
-    bool checkCollision1(SDL_Rect tileRect);
+    bool checkCollisionWithPoints(std::vector<Points>& pointss);
+//    bool checkCollision1(SDL_Rect tileRect);
 
 private:
     VELOCITY mVelocity;

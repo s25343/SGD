@@ -320,6 +320,9 @@ SDL2_LIB_DEPENDS:STATIC=general;m;general;kernel32;general;user32;general;gdi32;
 //Value Computed by CMake
 SDL2_SOURCE_DIR:STATIC=C:/Users/Lenovo/Downloads/KurwaJuzDziala/untitled/vendored/SDL
 
+//The directory containing a CMake configuration file for SDL2_ttf.
+SDL2_ttf_DIR:PATH=SDL2_ttf_DIR-NOTFOUND
+
 //Dependencies for the target
 SDL2main_LIB_DEPENDS:STATIC=general;shell32;
 

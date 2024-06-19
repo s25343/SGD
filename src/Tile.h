@@ -9,6 +9,6 @@ public:
 
     void render(SDL_Renderer* renderer);
 
-    bool checkCollision(SDL_Rect playerRect);
+//    bool checkCollision(SDL_Rect playerRect);
 };
 #endif //MYGAME_TILE_H

@@ -11,9 +11,9 @@ void Tile::render(SDL_Renderer *renderer) {
     SDL_RenderFillRect(renderer, &mRect);
 }
 
-bool Tile::checkCollision(SDL_Rect playerRect) {
-    if(SDL_HasIntersection(&playerRect, &mRect)){
-        return true;
-    }
-    return false;
-}
+//bool Tile::checkCollision(SDL_Rect playerRect) {
+//    if(SDL_HasIntersection(&playerRect, &mRect)){
+//        return true;
+//    }
+//    return false;
+//}

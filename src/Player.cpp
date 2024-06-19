@@ -58,8 +58,8 @@ void Player::update(int SCREEN_WIDTH, int SCREEN_HEIGHT, double dt, const std::v
     }
 }
 
-void Player::checkCollisionWithPoints(std::vector<Points>& pointss){
-    std::cout << "called" << std::endl;
+int score = 0;
+bool Player::checkCollisionWithPoints(std::vector<Points>& pointss){
     for (auto& point : pointss) {
         if (SDL_HasIntersection(&mRect, &point.mRect)) {
             point = pointss.back();
@@ -68,13 +68,6 @@ void Player::checkCollisionWithPoints(std::vector<Points>& pointss){
         }
     }
 }
-bool Player::checkCollision1(SDL_Rect tileRect) {
-    if(SDL_HasIntersection(&tileRect, &mRect)){
-        return true;
-    }
-    return false;
-}
-
 
 void Player::render(SDL_Renderer *renderer) {
     SDL_SetRenderDrawColor(renderer, 236, 21, 59, 1);
